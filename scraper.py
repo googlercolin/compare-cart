@@ -4,6 +4,15 @@ import requests
 from urllib.parse import urlparse
 import sys
 
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+cred = credentials.Certificate("cred.json")
+app = firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+print("Firebase Initialized.")
+
 
 def get_json(url, page):
     """
@@ -128,7 +137,7 @@ def save_products_as_json(url):
 
     # Get products
     products = get_products(url)
-
+    products.to_csv(f'{domain}.csv', index=False)
     # Save products to JSON file
     products.to_json(f'{domain}.json', index=False, indent=4)
     print('Products saved to:', f'{domain}.json')
