@@ -124,7 +124,13 @@ def save_products_as_json(url):
     """
 
     # Extract domain name from URL
-    domain = urlparse(url).netloc.split('.')[0]
+    domain_parts = urlparse(url).netloc.split('.')
+    
+    # Ignore "www" prefix if present
+    if domain_parts[0] == "www":
+        domain = domain_parts[1]
+    else:
+        domain = domain_parts[0]
 
     # Get products
     products = get_products(url)

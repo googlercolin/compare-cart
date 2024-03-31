@@ -5,9 +5,11 @@ import sys
 
 if __name__ == "__main__":
 
-    if len(sys.argv) != 2:
-        print("Usage: python retrieval_json.py <url>")
+    # Check if at least one URL is provided
+    if len(sys.argv) < 2:
+        print("Usage: python retrieval_json.py <url1> <url2> ...")
         sys.exit(1)
 
-    url = sys.argv[1]
-    scraper.save_products_as_json(url)
+    # Iterate over each URL argument
+    for url in sys.argv[1:]:
+        scraper.save_products_as_json(url)
