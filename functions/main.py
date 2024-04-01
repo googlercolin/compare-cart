@@ -19,6 +19,8 @@ import urllib.parse
 
 import fn_scraper
 
+from human_id import generate_id
+
 app = initialize_app()
 
 @https_fn.on_request()
@@ -34,9 +36,10 @@ def save_jsons(req: https_fn.Request) -> https_fn.Response:
         domain_product_json_str_dict[domain] = product_json_str
 
     # Push the new dict into Cloud Firestore using the Firebase Admin SDK.
-    _, doc_ref = firestore_client.collection("product_jsons").add(domain_product_json_str_dict)
+    custom_id = generate_id()
+    _ = firestore_client.collection("product_jsons").document(custom_id).set(domain_product_json_str_dict)
     # Send back a message that we've successfully written the message
-    return https_fn.Response(f"product_json_strs with doc ID {doc_ref.id} added.")
+    return https_fn.Response(f"product_json_strs with doc ID {custom_id} added.")
 
 
 def get_urls(req: https_fn.Request) -> list:
