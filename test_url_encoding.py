@@ -8,13 +8,14 @@ if __name__ == "__main__":
         print("Usage: python test_url_encoding.py <url1> <url2> ...")
         sys.exit(1)
 
+    base_url = "https://save-jsons-3cke46bipq-uc.a.run.app?urls="
     url_array = []
     # Iterate over each URL argument
     for url in sys.argv[1:]:
         url_array.append(url)
 
     url_array_string = str(url_array)
-    encoded_url_array_string = urllib.parse.quote(url_array_string, safe='')
+    encoded_url_array_string = base_url + urllib.parse.quote(url_array_string, safe='')
     print(encoded_url_array_string)
 
     # # Decode the parsed string
