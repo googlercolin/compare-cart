@@ -4,6 +4,26 @@ import './App.css';
 import classes from "./App.css";
 // import LoadingModal from "./Modals/LoadingModal.js";
 import LoadingModal from "./Modals/LoadingModal";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAUS23eJ8P2hWfNvGft8TCvLWlnrIigN0A",
+  authDomain: "compare-cart.firebaseapp.com",
+  databaseURL: "https://compare-cart-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "compare-cart",
+  storageBucket: "compare-cart.appspot.com",
+  messagingSenderId: "447151137533",
+  appId: "1:447151137533:web:a9957720e07964e9525494"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function App() {
   const [users, setUsers] = useState([])
@@ -18,12 +38,8 @@ function App() {
 
   useEffect(() => {
     setLoading(true)
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then(response => response.json())
-      .then(json => setUsers(json))
-      .finally(() => {
-        setLoading(false)
-      })
+    getUsers()
+    setLoading(false)
   }, [])
 
   //updates the event title and startTime in event
@@ -32,7 +48,13 @@ function App() {
     setProduct (prev=>{return {...prev, productLink: e.target.value}});
   }
 
-  
+  const getUsers = async () => {
+    const usersCol = collection(db, 'product_jsons');
+    const usersSnapshot = await getDocs(usersCol);
+    const userList = usersSnapshot.docs.map(doc => doc.id);
+    setUsers(userList);
+    return userList;
+  }
 
   // test
   const handler = () => {
@@ -79,8 +101,8 @@ function App() {
                 <th>Phone</th>
               </tr>
               {users.map(user => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
+                <tr key={user}>
+                  <td>{user}</td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
                 </tr>
