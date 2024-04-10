@@ -10,15 +10,18 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+const APP_ID = process.env.REACT_APP_APP_ID
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAUS23eJ8P2hWfNvGft8TCvLWlnrIigN0A",
+  apiKey: API_KEY,
   authDomain: "compare-cart.firebaseapp.com",
   databaseURL: "https://compare-cart-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "compare-cart",
   storageBucket: "compare-cart.appspot.com",
   messagingSenderId: "447151137533",
-  appId: "1:447151137533:web:a9957720e07964e9525494"
+  appId: APP_ID
 };
 
 // Initialize Firebase
@@ -49,6 +52,9 @@ function App() {
   }
 
   const getUsers = async () => {
+    console.log("getUsers")
+    console.log("API", API_KEY);
+    console.log("APP", APP_ID);
     const usersCol = collection(db, 'product_jsons');
     const usersSnapshot = await getDocs(usersCol);
     const userList = usersSnapshot.docs.map(doc => doc.id);
