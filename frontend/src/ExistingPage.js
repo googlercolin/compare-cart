@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { db } from "./Firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-const ExistingPage = ({ match }) => {
+const ExistingPage = () => {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [product, setProduct] = useState({
@@ -15,14 +15,8 @@ const ExistingPage = ({ match }) => {
     });
     const [productNameValid, setProductNameValid] = useState(true);
 
-    // const {
-    //     params: { personId },
-    //   } = match;
-
-    console.log("match", match)
     const { uniqueid } = useParams();
 
-    console.log('uniqueid11', uniqueid)
   
     useEffect(() => {
       setLoading(true)
@@ -38,7 +32,7 @@ const ExistingPage = ({ match }) => {
             const docSnapshot = await getDoc(docRef);
         
             if (docSnapshot.exists) {
-                setData(docSnapshot.data());
+                setData(docSnapshot.data().littlewolf);
                 console.log("Document data:", docSnapshot.data());
               return docSnapshot.data();
             } else {
@@ -69,6 +63,12 @@ const ExistingPage = ({ match }) => {
         setProductNameValid(true);
       }, 3000);
     }
+
+    console.log("data", data)
+    data.map(product => (
+      console.log("product", product)
+    ))
+
     return (<div className="App">
     {/* <LoadingModal isLoading = { loading }/> */}
     {loading ? (
@@ -76,10 +76,51 @@ const ExistingPage = ({ match }) => {
       // <div>Loading...</div>
     ) : (
       <div>
-        <h4 className="title">Product Link: {data.toString()}</h4>
+        <h1>Compare Cart</h1>
+        <h5 className="newpage">Enter a product link to add more products!</h5>
+        <h4 className="title">Enter Product Link:</h4>
+        <input
+          value={product.productLink}
+          name="productLink"
+          placeholder="Enter link to product" 
+          onChange={inputHandler}
+        />
+        {!productNameValid && (
+          <p className="invalidText">
+            This is a required field.
+          </p>
+        )}
+        <br></br>
+        <button className="Button" onClick={handler}>Search / Click to reload</button>
+        <br></br>
+        <br></br>
+        <h1>Users</h1>
+        <div className="Table">
+          <table border={1}>
+            <tbody>
+              <tr>
+                <th>Title</th>
+                <th>Tags</th>
+                <th>Variants</th>
+                <th>Image</th>
+                <th>Go To</th>
+              </tr>
+              {data.map(product => (
+                <tr key={product.id}>
+                  <td>{product.title}</td>
+                  <td>{product.tags}</td>
+                  <td>{product.variants.price}</td>
+                  <td>{product.image_links}</td>
+                  <td>{product.url}</td>
+                </tr>
+              ))}
+
+            </tbody>
+            
+          </table>
+        </div>
       </div>
     )}
-
   </div>)
   };
 

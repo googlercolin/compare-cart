@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs } from 'firebase/firestore';
 
 const HomePage = () => {
     const [users, setUsers] = useState([])
@@ -43,13 +43,16 @@ const HomePage = () => {
       // <div>Loading...</div>
     ) : (
       <div>
-        <h4 className="title">Product Link:</h4>
+        <h1>Compare Cart</h1>
+        <h5 className="newpage">Enter a product link to generate a page link for you</h5>
+        <h4 className="title">Enter Product Link:</h4>
         <input
           value={product.productLink}
           name="productLink"
           placeholder="Enter link to product" 
           onChange={inputHandler}
         />
+        <br></br>
         {!productNameValid && (
           <p className="invalidText">
             This is a required field.
@@ -58,42 +61,8 @@ const HomePage = () => {
         <br></br>
         <button className="Button" onClick={handler}>Search / Click to reload</button>
         <br></br>
-        <br></br>
-        <h1>Users</h1>
-        <div className="Table">
-          <table border={1}>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-            </tr>
-            {users.map(user => (
-              <tr key={user}>
-                <td>{user}</td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-              </tr>
-            ))}
-          </table>
-        </div>
       </div>
     )}
-
-    {/* <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo"/>
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header> */}
-
   </div>)
   };
 

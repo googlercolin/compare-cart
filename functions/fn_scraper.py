@@ -133,6 +133,7 @@ def return_products_as_json_string_and_domain(url):
         domain = domain_parts[0]
 
     # Get products
-    products = get_products(url).to_json(index=False, indent=4)
+    # products = get_products(url).to_json(index=False, indent=4)
+    products = get_products(url)
 
     return products, domain
