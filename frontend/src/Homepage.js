@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
+// import classes from "./App.css";
 import { collection, getDocs } from 'firebase/firestore';
 
 const HomePage = () => {
@@ -43,24 +44,28 @@ const HomePage = () => {
       // <div>Loading...</div>
     ) : (
       <div>
-        <h1>Compare Cart</h1>
-        <h5 className="newpage">Enter a product link to generate a page link for you</h5>
-        <h4 className="title">Enter Product Link:</h4>
-        <input
-          value={product.productLink}
-          name="productLink"
-          placeholder="Enter link to product" 
-          onChange={inputHandler}
-        />
-        <br></br>
-        {!productNameValid && (
-          <p className="invalidText">
-            This is a required field.
-          </p>
-        )}
-        <br></br>
-        <button className="Button" onClick={handler}>Search / Click to reload</button>
-        <br></br>
+        <div className="App-header">
+          <div className="header">
+            <h1 className="webTitle">Compare Cart</h1>
+            <p className="webSubtitle">Your Product Aggregator</p>
+          </div>
+        </div>
+        <div className="App-body">
+          {/* <h5 className="newpage">Enter a product link to generate a page link for you</h5> */}
+          <h4 className="title">Enter a product to track:</h4>
+          <input
+            value={product.productLink}
+            name="productLink"
+            placeholder=" Enter link to product" 
+            onChange={inputHandler}
+          />
+          {!productNameValid && (
+            <p className="invalidText">
+              This is a required field.
+            </p>
+          )}
+          <button className="Button" onClick={handler}>Track!</button>
+        </div>
       </div>
     )}
   </div>)

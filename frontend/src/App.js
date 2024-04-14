@@ -4,7 +4,6 @@ import { Link, BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import './App.css';
 import HomePage from "./Homepage";
 import ExistingPage from "./ExistingPage";
-import classes from "./App.css";
 // import LoadingModal from "./Modals/LoadingModal.js";
 import LoadingModal from "./Modals/LoadingModal";
 // Import the functions you need from the SDKs you need
