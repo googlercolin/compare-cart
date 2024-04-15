@@ -76,48 +76,49 @@ const ExistingPage = () => {
       // <div>Loading...</div>
     ) : (
       <div>
-        <h1>Compare Cart</h1>
-        <h5 className="newpage">Enter a product link to add more products!</h5>
-        <h4 className="title">Enter Product Link:</h4>
-        <input
-          value={product.productLink}
-          name="productLink"
-          placeholder="Enter link to product" 
-          onChange={inputHandler}
-        />
-        {!productNameValid && (
-          <p className="invalidText">
-            This is a required field.
-          </p>
-        )}
-        <br></br>
-        <button className="Button" onClick={handler}>Search / Click to reload</button>
-        <br></br>
-        <br></br>
-        <h1>Users</h1>
-        <div className="Table">
-          <table border={1}>
-            <tbody>
-              <tr>
-                <th>Title</th>
-                <th>Tags</th>
-                <th>Variants</th>
-                <th>Image</th>
-                <th>Go To</th>
-              </tr>
-              {data.map(product => (
-                <tr key={product.id}>
-                  <td>{product.title}</td>
-                  <td>{product.tags}</td>
-                  <td>{product.variants.price}</td>
-                  <td>{product.image_links}</td>
-                  <td>{product.url}</td>
+        <div className="App-header">
+          <div className="header">
+            <h1 className="webTitle">Compare Cart</h1>
+            <p className="webSubtitle">Your Product Aggregator</p>
+          </div>
+        </div>
+        <div className="App-body">
+          {/* <h5 className="newpage">Enter a product link to generate a page link for you</h5> */}
+          <h4 className="title">Enter a product to track:</h4>
+          <input
+            value={product.productLink}
+            name="productLink"
+            placeholder=" Enter link to product" 
+            onChange={inputHandler}
+          />
+          {!productNameValid && (
+            <p className="invalidText">
+              This is a required field.
+            </p>
+          )}
+          <button className="Button" onClick={handler}>Track!</button>
+          <div className="Table">
+            <table border={1}>
+              <tbody>
+                <tr>
+                  <th>Title</th>
+                  <th>Tags</th>
+                  <th>Variants</th>
+                  <th>Image</th>
+                  <th>Go To</th>
                 </tr>
-              ))}
-
-            </tbody>
-            
-          </table>
+                {data.map(product => (
+                  <tr key={product.id}>
+                    <td>{product.title}</td>
+                    <td>{product.tags}</td>
+                    <td>{product.variants.price}</td>
+                    <td>{product.image_links}</td>
+                    <td>{product.url}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )}
