@@ -65,6 +65,20 @@ const HomePage = () => {
             </p>
           )}
           <button className="Button" onClick={handler}>Track!</button>
+          <br></br>
+          <h4 className="title">Existing users can enter their link here:</h4>
+          <input
+            value={product.uniqueLink}
+            name="uniqueLink"
+            placeholder=" Enter link to product" 
+            onChange={inputHandler}
+          />
+          {!productNameValid && (
+            <p className="invalidText">
+              This is a required field.
+            </p>
+          )}
+          <button className="Button" onClick={handler}>Go!</button>
         </div>
       </div>
     )}
