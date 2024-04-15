@@ -18,20 +18,31 @@ const ExistingPage = () => {
       productLink: "",
     });
 
+  let gridOptions = {
+    domLayout: 'autoHeight',
+  }
+
   // Column Definitions: Defines the columns to be displayed.
   const [colDefs, setColDefs] = useState([
-    { headerName: "Title", field: "title"},
+    { headerName: "ID", field: "id"},
+    { headerName: "Title", field: "title", filter: true },
     { headerName: "Tags", field: "tags"},
-    { headerName: "Variant", field: "variants"},
-    { headerName: "Image", field: "image"},
-    { headerName: "Go To", field: "url" }
+    { headerName: "Variants", field: "variants"},
+    { headerName: "Image", field: "image", autoHeight: true, autoWidth: true,
+      cellRenderer: props => {
+          // put the value in bold
+          console.log("props", props.value[0])
+          return <img src={props.value[0]} alt="product" style={{width: "100px"}}></img>
+      }
+    },
+    { headerName: "Go To", field: "url", 
+      cellRenderer: props => {
+        return <a href={props.value} target="_blank" rel="noreferrer">Go to Product</a>
+      }
+    }
   ]);
 
-  const [rowData, setRowData] = useState([
-    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-  ]);
+  const [rowData, setRowData] = useState([]);
 
     const [productNameValid, setProductNameValid] = useState(true);
 
@@ -53,8 +64,8 @@ const ExistingPage = () => {
         
             if (docSnapshot.exists) {
               // setData(docSnapshot.data().products);
-              setRowData(docSnapshot.data().products.map(product => (
-                {title: product.title, tags: product.tags, variants: product.variants.price, image: product.image_links, url: product.url}
+              setRowData(docSnapshot.data().products.map((product, id) => (
+                {id: id + 1, title: product.title, tags: product.tags, variants: product.variants.price, image: product.image_links, url: product.url}
               )));
               console.log("Document data:", docSnapshot.data());
                 
@@ -121,8 +132,10 @@ const ExistingPage = () => {
             style={{ height: 500 }} // the grid will fill the size of the parent container
           >
             <AgGridReact
+                style={{ width: '100%', height: '100%' }}
                 rowData={rowData}
                 columnDefs={colDefs}
+                gridOptions={gridOptions}
             />
           </div>
         </div>
