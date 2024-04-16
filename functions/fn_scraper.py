@@ -98,7 +98,7 @@ def get_products(url):
             break
         else:
             # Selecting required fields
-            selected_fields = ['id', 'body_html', 'tags', 'images', 'updated_at', 'handle', 'title', 'variants']
+            selected_fields = ['id', 'tags', 'images', 'updated_at', 'handle', 'title', 'variants']
             df = pd.concat([df, products_dict[selected_fields]], ignore_index=True)
             page += 1
 

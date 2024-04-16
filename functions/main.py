@@ -24,37 +24,55 @@ from human_id import generate_id
 app = initialize_app()
 
 @https_fn.on_request()
-def save_jsons(req: https_fn.Request) -> https_fn.Response:
+def add_products(req: https_fn.Request) -> https_fn.Response:
     """Take the HTTP request passed to this HTTP endpoint and return a list of doc_ref.ids of the product_jsons added to Firestore."""
 
     firestore_client: google.cloud.firestore.Client = firestore.client()
-    url_array = get_urls(req)
 
-    domain_product_json_str_dict = {}
+    url_array = req.json.get('urls')
+
+    prods_added = []
+    custom_id = req.json.get('id') or generate_id()
+
     for url in url_array:
-        product_json_str, domain = fn_scraper.return_products_as_json_string_and_domain(url)
-        domain_product_json_str_dict[domain] = product_json_str
+        products_df, _ = fn_scraper.return_products_as_json_string_and_domain(url)
+        products = products_df.to_dict(orient='records')
 
-    # Push the new dict into Cloud Firestore using the Firebase Admin SDK.
-    custom_id = generate_id()
-    _ = firestore_client.collection("product_jsons").document(custom_id).set(domain_product_json_str_dict)
-    # Send back a message that we've successfully written the message
-    return https_fn.Response(f"product_json_strs with doc ID {custom_id} added.")
+        for product in products:
+            prods_added.append(product['handle'])
+            firestore_client.collection('unique_links').document(custom_id).set({'id': custom_id}, merge=True)
+            firestore_client.collection('unique_links').document(custom_id).collection('products').document(str(product['id'])).set(product, merge=True)
+
+    return https_fn.Response(f"products: {prods_added} added to collection with unique link {custom_id}.")
+
+@https_fn.on_request()
+def delete_product(req: https_fn.Request) -> https_fn.Response:
+    """Take the HTTP request passed to this HTTP endpoint and return a list of doc_ref.ids of the product_jsons added to Firestore."""
+
+    firestore_client: google.cloud.firestore.Client = firestore.client()
+
+    product_id = req.json.get('product_id')
+
+    custom_id = req.json.get('id')
+    firestore_client.collection('unique_links').document(custom_id).collection('products').document(product_id).delete()
+
+    return https_fn.Response(f"products: {product_id} deleted from collection with unique link {custom_id}.")
 
 
-def get_urls(req: https_fn.Request) -> list:
-    """Take the urls parameter passed to this HTTP endpoint and return a list of URLs."""
+# def get_urls(req: https_fn.Request) -> list:
+#     """Take the urls parameter passed to this HTTP endpoint and return a list of URLs."""
 
-    # Grab the urls parameter.
-    encoded_url_array_string = req.args.get("urls")
-    if encoded_url_array_string is None:
-        return []  # Return an empty list
+#     # print("hi", req.json.get('urls'))
+#     # Grab the urls parameter.
+#     encoded_url_array_string = req.json.get("urls")
+#     if encoded_url_array_string is None:
+#         return []  # Return an empty list
 
-    # Decode the parsed string
-    decoded_url_array_string = urllib.parse.unquote(encoded_url_array_string)
+#     # # Decode the parsed string
+#     # decoded_url_array_string = urllib.parse.unquote(encoded_url_array_string)
 
-    # Convert the string back to a list
-    decoded_url_array = eval(decoded_url_array_string)
-    return decoded_url_array
+#     # # Convert the string back to a list
+#     # decoded_url_array = eval(decoded_url_array_string)
+#     return encoded_url_array_string
 
 
