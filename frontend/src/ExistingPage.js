@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
 import { useParams } from "react-router-dom";
-import { db } from "./Firebase";
+import { db, deleteProduct, addProducts } from "./Firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { AgGridReact } from "ag-grid-react"; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
@@ -27,14 +27,17 @@ const ExistingPage = () => {
   // Column Definitions: Defines the columns to be displayed.
   const colDefs = [
     {
-      headerName: "ID",
-      field: "id",
+      headerName: "#",
+      field: "idx",
       width: "67px",
       cellRenderer: (props) => {
         return (
           <div>
             <div>{props.value}</div>
-            <button style={{ fontSize: 12 }}>X</button>
+            <button style={{ fontSize: 12 }} onClick={ async () => {
+              await deleteProduct({ product_id: props.data.id.toString(), id: uniqueid.toString() });
+              getUserData(uniqueid);
+            }}>X</button>
           </div>
         );
       },
@@ -136,8 +139,9 @@ const ExistingPage = () => {
         setVariantsList(arr);
 
         setRowData(
-          prods.map((product, id) => ({
-            id: id + 1,
+          prods.map((product, idx) => ({
+            idx: idx + 1,
+            id: product.id,
             title: product.title,
             tags: product.tags,
             variants: product.variants,
@@ -182,15 +186,18 @@ const ExistingPage = () => {
   };
 
   // test
-  const handler = () => {
+  const handler = async () => {
     // setLoading(true);
     // setTimeout(() => {
     //   setLoading(false);
     // }, 3000);
-    setProductNameValid(false);
-    setTimeout(() => {
-      setProductNameValid(true);
-    }, 3000);
+    // setProductNameValid(false);
+    // setTimeout(() => {
+    //   setProductNameValid(true);
+    // }, 3000);
+    console.log("add product", product.productLink)
+    await addProducts({ urls: [product.productLink], id: uniqueid });
+    window.location.reload();
   };
 
   return (
@@ -209,6 +216,7 @@ const ExistingPage = () => {
           </div>
           <div className="App-body">
             {/* <h5 className="newpage">Enter a product link to generate a page link for you</h5> */}
+            <h4>Your Unique Link is: {uniqueid}</h4>
             <h4 className="title">Enter a product to track:</h4>
             <input
               value={product.productLink}

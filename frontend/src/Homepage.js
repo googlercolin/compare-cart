@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
 // import classes from "./App.css";
-import { db } from "./Firebase";
+import { db, addProducts } from "./Firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const HomePage = () => {
@@ -29,15 +29,23 @@ const HomePage = () => {
     }
   
     // test
-    const handler = () => {
+    const handler = async () => {
       // setLoading(true);
       // setTimeout(() => {
       //   setLoading(false);
       // }, 3000);
-      setProductNameValid(false);
-      setTimeout(() => {
-        setProductNameValid(true);
-      }, 3000);
+      // setProductNameValid(false);
+      // setTimeout(() => {
+      //   setProductNameValid(true);
+      // }, 3000);
+      console.log("add product", product.productLink)
+      setLoading(true)
+      console.log("Loading set")
+      await addProducts({ urls: [product.productLink]}).then((res) => {
+        console.log("res", res.data.id)
+        setLoading(false)
+        window.location.href = window.location.href+res.data.id;
+      })
     }
 
     const inputLink = (e) => {
