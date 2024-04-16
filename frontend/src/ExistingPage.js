@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
 import { useParams } from "react-router-dom";
 import { db } from "./Firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { AgGridReact } from "ag-grid-react"; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
@@ -12,15 +12,38 @@ const ExistingPage = () => {
     domLayout: "autoHeight",
   };
 
+  var saleFilterParams = {
+    allowedCharPattern: "\\d\\-\\,\\$",
+    numberParser: (text) => {
+      return text == null
+        ? null
+        : parseFloat(text.replace(",", ".").replace("$", ""));
+    },
+    numberFormatter: (value) => {
+      return value == null ? null : value.toString().replace(".", ",");
+    },
+  };
+
   // Column Definitions: Defines the columns to be displayed.
   const colDefs = [
-    { headerName: "ID", field: "id", autoWidth: true },
+    {
+      headerName: "ID",
+      field: "id",
+      width: "67px",
+      cellRenderer: (props) => {
+        return (
+          <div>
+            <div>{props.value}</div>
+            <button style={{ fontSize: 12 }}>X</button>
+          </div>
+        );
+      },
+    },
     { headerName: "Title", field: "title", filter: true, flex: 1 },
     {
       headerName: "Image",
       field: "image",
       autoHeight: true,
-      autoWidth: true,
       cellRenderer: (props) => {
         return (
           <img
@@ -37,7 +60,6 @@ const ExistingPage = () => {
       field: "variants",
       filter: true,
       autoHeight: true,
-      autoWidth: true,
       cellRenderer: (props) => {
         return (
           <div>
@@ -55,7 +77,15 @@ const ExistingPage = () => {
         );
       },
     },
-    { headerName: "Price", field: "price", filter: true },
+    {
+      headerName: "Price",
+      field: "price",
+      filter: "agNumberColumnFilter",
+      // floatingFilter: true,
+      filterParams: saleFilterParams,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) =>
+        parseFloat(valueA) - parseFloat(valueB),
+    },
     {
       headerName: "Go To",
       field: "url",
@@ -93,14 +123,20 @@ const ExistingPage = () => {
 
   const getUserData = async (uniqueid) => {
     try {
-      const docRef = doc(db, "product_jsons", uniqueid);
-      const docSnapshot = await getDoc(docRef);
+      const querySnapshot = await getDocs(collection(db, "unique_links", uniqueid, "products"));
+      let prods = [];
+      querySnapshot.forEach((doc) => {
+        prods.push(doc.data());
+        // console.log(doc.id, " => ", doc.data());
+      });
 
-      if (docSnapshot.exists) {
-        let arr = new Array(docSnapshot.data().products.length).fill(0);
+      if (prods.length > 0) {
+        let arr = new Array(querySnapshot.length).fill(0);
+        // console.log('arr', arr)
         setVariantsList(arr);
+
         setRowData(
-          docSnapshot.data().products.map((product, id) => ({
+          prods.map((product, id) => ({
             id: id + 1,
             title: product.title,
             tags: product.tags,
@@ -110,7 +146,6 @@ const ExistingPage = () => {
             url: product.url,
           }))
         );
-        
       } else {
         console.log("No such document!");
         return null;
@@ -128,13 +163,14 @@ const ExistingPage = () => {
       let newarr = [...prev];
       newarr[rowidx] = index;
       return newarr;
-    })
+    });
     console.log("after", variantsList);
     setRowData((prev) => {
       let newarr = [...prev];
       newarr[rowidx].price = prev[rowidx].variants[index].price;
       return newarr;
-    })
+    });
+    console.log("after", rowData);
   };
 
   //updates the event title and startTime in event

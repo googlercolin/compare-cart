@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const APP_ID = process.env.REACT_APP_APP_ID

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import LoadingModal from "./Modals/LoadingModal";
 // import classes from "./App.css";
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from "./Firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 const HomePage = () => {
-    const [users, setUsers] = useState([])
+
     const [loading, setLoading] = useState(false)
     const [product, setProduct] = useState({
       productID: "",
@@ -14,9 +15,10 @@ const HomePage = () => {
     });
     const [productNameValid, setProductNameValid] = useState(true);
   
+    const [uniqueLink, setUniqueLink] = useState("");
+
     useEffect(() => {
       setLoading(true)
-    //   getUsers()
       setLoading(false)
     }, [])
   
@@ -37,6 +39,26 @@ const HomePage = () => {
         setProductNameValid(true);
       }, 3000);
     }
+
+    const inputLink = (e) => {
+      e.preventDefault();
+      setUniqueLink (prev=>{return e.target.value});
+    }
+
+    const uniqueLinkHandler = async () => {
+      console.log("getLinks")
+      const links_ref = collection(db,'unique_links');
+      const querySnapshot = await getDocs(links_ref);
+      querySnapshot.forEach(doc => {
+        console.log(doc.id, '=>', doc.data());
+        if (doc.id === uniqueLink) {
+          console.log("found")
+          window.location.href = window.location.href+uniqueLink;
+        }
+      }); 
+      console.log("not found");
+    }
+
     return (<div className="App">
     {/* <LoadingModal isLoading = { loading }/> */}
     {loading ? (
@@ -66,19 +88,19 @@ const HomePage = () => {
           )}
           <button className="Button" onClick={handler}>Track!</button>
           <br></br>
-          <h4 className="title">Existing users can enter their link here:</h4>
+          <h4 className="title">Existing users can enter their unique ID here:</h4>
           <input
             value={product.uniqueLink}
             name="uniqueLink"
             placeholder=" Enter link to product" 
-            onChange={inputHandler}
+            onChange={inputLink}
           />
           {!productNameValid && (
             <p className="invalidText">
               This is a required field.
             </p>
           )}
-          <button className="Button" onClick={handler}>Go!</button>
+          <button className="Button" onClick={uniqueLinkHandler}>Go!</button>
         </div>
       </div>
     )}
