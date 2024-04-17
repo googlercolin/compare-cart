@@ -95,32 +95,36 @@ const HomePage = () => {
         </div>
         <div className="App-body">
           <h4 className="title">Enter a product to track:</h4>
-          <input
-            value={product.productLink}
-            name="productLink"
-            placeholder=" Enter link to product" 
-            onChange={inputHandler}
-          />
-          {!productNameValid && (
-            <p className="invalidText">
-              This is a required field.
-            </p>
-          )}
-          <button className="Button" onClick={productHandler}>Track!</button>
+          <div className="inputSearch">
+            <input
+              value={product.productLink}
+              name="productLink"
+              placeholder=" Enter link to product" 
+              onChange={inputHandler}
+            />
+            {!productNameValid && (
+              <p className="invalidText">
+                This is a required field.
+              </p>
+            )}
+            <button className="Button" onClick={productHandler}>Track!</button>
+          </div>
           <br></br>
           <h4 className="title">Resume tracking with your existing unique ID:</h4>
-          <input
-            value={product.uniqueLink}
-            name="uniqueLink"
-            placeholder=" Enter unique ID xx-xxx-xxx-xx" 
-            onChange={inputLink}
-          />
-          {!productNameValid && (
-            <p className="invalidText">
-              This is a required field.
-            </p>
-          )}
-          <button className="Button" onClick={uniqueLinkHandler}>Go!</button>
+          <div className="inputSearch">
+            <input
+              value={product.uniqueLink}
+              name="uniqueLink"
+              placeholder=" Enter unique ID xx-xxx-xxx-xx" 
+              onChange={inputLink}
+            />
+            {!productNameValid && (
+              <p className="invalidText">
+                This is a required field.
+              </p>
+            )}
+            <button className="Button" onClick={uniqueLinkHandler}>Go!</button>
+          </div>
         </div>
       </div>
     </div>

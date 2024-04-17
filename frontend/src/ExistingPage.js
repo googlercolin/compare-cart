@@ -70,7 +70,7 @@ const ExistingPage = () => {
     { headerName: "Tags", field: "tags", filter: true, cellRenderer: (props) => {
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word', lineHeight: '2' }}>
-            {props.value}
+            {props.value.join(", ")}
           </div>
         );
       },
@@ -123,7 +123,7 @@ const ExistingPage = () => {
     },
     {
       // delete button
-      width: "100px",
+      width: "120px",
       cellRenderer: (props) => {
         return (
           <div className="col">
@@ -273,18 +273,20 @@ const ExistingPage = () => {
         <div className="App-body">
           <h4 className="title">Your Unique Link is: {uniqueid}</h4>
           <h4 className="title">Enter a product to track:</h4>
-          <input
-            value={product.productLink}
-            name="productLink"
-            placeholder=" Enter link to product"
-            onChange={inputHandler}
-          />
-          {!productNameValid && (
-            <p className="invalidText">This is a required field.</p>
-          )}
-          <button className="Button" onClick={productHandler}>
-            Track!
-          </button>
+          <div className="inputSearch">
+            <input
+              value={product.productLink}
+              name="productLink"
+              placeholder=" Enter link to product" 
+              onChange={inputHandler}
+            />
+            {!productNameValid && (
+              <p className="invalidText">
+                This is a required field.
+              </p>
+            )}
+            <button className="Button" onClick={productHandler}>Track!</button>
+          </div>
           <h2>Tracked Products</h2>
           <div
             className="ag-theme-quartz" // applying the grid theme
