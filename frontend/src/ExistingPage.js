@@ -30,19 +30,29 @@ const ExistingPage = () => {
       headerName: "#",
       field: "idx",
       width: "67px",
+      // width: "83px",
       cellRenderer: (props) => {
         return (
-          <div>
+          <div className="col">
             <div>{props.value}</div>
-            <button style={{ fontSize: 12 }} onClick={ async () => {
+            {/* <button className="cancelButton" style={{ fontSize: 12 }} onClick={ async () => {
+              setLoading(true);
               await deleteProduct({ product_id: props.data.id.toString(), id: uniqueid.toString() });
+              setLoading(false);
               getUserData(uniqueid);
-            }}>X</button>
+            }}>delete</button> */}
           </div>
         );
       },
     },
-    { headerName: "Title", field: "title", filter: true, flex: 1 },
+    { headerName: "Title", field: "title", filter: true, cellRenderer: (props) => {
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word', lineHeight: '2' }}>
+            {props.value}
+          </div>
+        );
+      },
+    },
     {
       headerName: "Image",
       field: "image",
@@ -57,7 +67,14 @@ const ExistingPage = () => {
         );
       },
     },
-    { headerName: "Tags", field: "tags", filter: true },
+    { headerName: "Tags", field: "tags", filter: true, cellRenderer: (props) => {
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word', lineHeight: '2' }}>
+            {props.value}
+          </div>
+        );
+      },
+    },
     {
       headerName: "Variants",
       field: "variants",
@@ -65,11 +82,13 @@ const ExistingPage = () => {
       autoHeight: true,
       cellRenderer: (props) => {
         return (
-          <div>
+          <div className="variant">
             {props.value.map((variant, index) => (
-              <div key={index}>
+              <div className="col" key={index}>
                 <button
-                  className="VariantButton"
+                  // className="VariantButton"
+                  // style selected variant button differently
+                  className={variantsList[props.rowIndex] === index ? "VariantButton selected" : "VariantButton"}
                   onClick={() => selectVariant(index, props.rowIndex)}
                 >
                   {variant.variant_title}: {variant.price}
@@ -83,6 +102,7 @@ const ExistingPage = () => {
     {
       headerName: "Price",
       field: "price",
+      width: "150px",
       filter: "agNumberColumnFilter",
       // floatingFilter: true,
       filterParams: saleFilterParams,
@@ -90,13 +110,30 @@ const ExistingPage = () => {
         parseFloat(valueA) - parseFloat(valueB),
     },
     {
-      headerName: "Go To",
+      headerName: "Product Link",
       field: "url",
+      width: "150px",
       cellRenderer: (props) => {
         return (
           <a href={props.value} target="_blank" rel="noreferrer">
             Go to Product
           </a>
+        );
+      },
+    },
+    {
+      // delete button
+      width: "100px",
+      cellRenderer: (props) => {
+        return (
+          <div className="col">
+            <button className="cancelButton" style={{ fontSize: 12 }} onClick={ async () => {
+              setLoading(true);
+              await deleteProduct({ product_id: props.data.id.toString(), id: uniqueid.toString() });
+              setLoading(false);
+              getUserData(uniqueid);
+            }}>delete</button>
+          </div>
         );
       },
     },
@@ -158,6 +195,9 @@ const ExistingPage = () => {
       console.error("Error getting document:", error);
       return null;
     }
+    // set default variant to be the first 
+    const defaultVariantsList = Array(rowData.length).fill(0);
+    setVariantsList(defaultVariantsList);
   };
 
   const selectVariant = (index, rowidx) => {
@@ -185,70 +225,84 @@ const ExistingPage = () => {
     });
   };
 
-  // test
-  const handler = async () => {
-    // setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 3000);
+  // add product to table
+  const productHandler = async () => {
     // setProductNameValid(false);
     // setTimeout(() => {
     //   setProductNameValid(true);
     // }, 3000);
     console.log("add product", product.productLink)
+    setLoading(true);
+    console.log("Loading set");
     await addProducts({ urls: [product.productLink], id: uniqueid });
+    setLoading(false);
     window.location.reload();
   };
 
+  const setHidden = (disableScroll) => {
+    // console.log(document.body.style.overflow);
+    if (disableScroll) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "scroll";
+    }
+  };
+
+  useEffect(() => {
+    setHidden(loading);
+  }, [loading]);
+  
+
+  // const testLoading = () => {
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 3000);
+  // }
+
   return (
     <div className="App">
-      {/* <LoadingModal isLoading = { loading }/> */}
-      {loading ? (
-        <LoadingModal isLoading={loading} />
-      ) : (
-        // <div>Loading...</div>
-        <div>
-          <div className="App-header">
-            <div className="header">
-              <h1 className="webTitle">Compare Cart</h1>
-              <p className="webSubtitle">Your Product Aggregator</p>
-            </div>
-          </div>
-          <div className="App-body">
-            {/* <h5 className="newpage">Enter a product link to generate a page link for you</h5> */}
-            <h4>Your Unique Link is: {uniqueid}</h4>
-            <h4 className="title">Enter a product to track:</h4>
-            <input
-              value={product.productLink}
-              name="productLink"
-              placeholder=" Enter link to product"
-              onChange={inputHandler}
-            />
-            {!productNameValid && (
-              <p className="invalidText">This is a required field.</p>
-            )}
-            <button className="Button" onClick={handler}>
-              Track!
-            </button>
-            <h2>Tracked Products</h2>
-            <div
-              className="ag-theme-quartz" // applying the grid theme
-              style={{ height: 500 }} // the grid will fill the size of the parent container
-            >
-              <AgGridReact
-                style={{ width: "100%", height: "100%" }}
-                rowData={rowData}
-                columnDefs={colDefs}
-                gridOptions={gridOptions}
-                // autoSizeStrategy={{
-                //   type: "fitCellContents",
-                //   autoSizeColumns: "ID",
-                // }}
-              />
-            </div>
+      <LoadingModal isLoading = { loading }/>
+      <div>
+        <div className="App-header">
+          <div className="header">
+            <h1 className="webTitle">Compare Cart</h1>
+            <p className="webSubtitle">Your Product Aggregator</p>
           </div>
         </div>
-      )}
+        <div className="App-body">
+          <h4 className="title">Your Unique Link is: {uniqueid}</h4>
+          <h4 className="title">Enter a product to track:</h4>
+          <input
+            value={product.productLink}
+            name="productLink"
+            placeholder=" Enter link to product"
+            onChange={inputHandler}
+          />
+          {!productNameValid && (
+            <p className="invalidText">This is a required field.</p>
+          )}
+          <button className="Button" onClick={productHandler}>
+            Track!
+          </button>
+          <h2>Tracked Products</h2>
+          <div
+            className="ag-theme-quartz" // applying the grid theme
+            style={{ height: 500 }} // the grid will fill the size of the parent container
+          >
+            <AgGridReact
+              style={{ width: "100%", height: "100%"}}
+              rowData={rowData}
+              columnDefs={colDefs}
+              gridOptions={gridOptions}
+              // autoSizeStrategy={{
+              //   type: "fitCellContents",
+              //   autoSizeColumns: "ID",
+              // }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

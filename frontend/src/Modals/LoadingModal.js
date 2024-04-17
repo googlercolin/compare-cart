@@ -5,7 +5,7 @@ import classes from "./LoadingModal.module.css"
 export default function LoadingModal(props) {
     return (
         <>
-        {props.isLoading && 
+        {props.isLoading &&
         <>
         <div className={classes.pic}>
             <img className={classes.spinner} src={LoadingGif}/>

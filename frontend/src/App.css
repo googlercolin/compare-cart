@@ -12,6 +12,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  /* z-index: 9999; */
 }
 
 .header {
@@ -32,6 +33,7 @@
 }
 
 .App-body {
+  /* z-index: 9999; */
   margin-left: 50px;
   margin-right: 50px;
   padding-top: 8px;
@@ -42,6 +44,10 @@
   flex-direction: column;
   -webkit-font-smoothing: auto;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.title{
+  margin-bottom: 10px;
 }
 
 input {
@@ -59,8 +65,39 @@ input {
 
 .Table {
   display: flex;
-  justify-content: center;
-  width: 50%;
+  align-items: center;
+  /* justify-content: center;
+  width: 50%; */
+  /* justify-items: center; */
+  margin-bottom: 5vh;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+
+.cancelButton {
+  border: none;
+  align-items: center;
+  display: flex;
+  background-color: #feffed00;
+  color: rgb(149, 0, 0);
+  width: fit-content;
+  height: fit-content;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+.cancelButton:hover {
+  cursor: pointer;
+  background-color: #ededed;
+  text-decoration: underline;
 }
 
 .Button {
@@ -94,10 +131,6 @@ input {
   box-shadow: 0 0 6px 6px #ba5bb21d; */
 }
 
-.title{
-  margin-bottom: 10px;
-}
-
 .invalidText {
   color: red;
   font-size: clamp(0.8rem, 1vw, 1.5rem);
@@ -107,34 +140,62 @@ input {
   margin-bottom: 5px;
 }
 
+.variant {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .VariantButton {
-  border: none;
+  border: 3px solid rgb(213, 242, 203);
+  /* border-color: rgb(193, 230, 181); */
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: rgba(102, 60, 117, 1);
-  /* background-color: black; */
-  /* background-color: #ba5bb2; */
-  /* opacity: 0.37; */
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  /* font-size: clamp(0.8rem, 2vw, 1rem); */
   font-size: 90%;
+  flex-wrap: wrap;
+  white-space: normal;
   width: 90%;
-  height: 5vh;
-  padding: 1rem;
+  /* height: 5vh; */
+  padding: 0.5rem;
   border-radius: 15px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  /* margin-top: 5% */
-  box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.50);
-  -webkit-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.50);
-  -moz-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.50);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  /* box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50);
+  -webkit-box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50);
+  -moz-box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50); */
 }
 .VariantButton:hover {
   cursor: pointer;
-  -webkit-box-shadow: 0 0 6px 6px rgba(27, 26, 28, 0.3);
-  box-shadow: 0 0 6px 6px rgba(27, 26, 28, 0.3);
-  /* -webkit-box-shadow: 0 0 6px 6px #ba5bb21d;
-  box-shadow: 0 0 6px 6px #ba5bb21d; */
+  -webkit-box-shadow: 0 0 2.5px 2.5px rgba(57, 105, 40, 0.421); 
+  box-shadow: 0 0 2.5px 2.5px rgba(57, 105, 40, 0.421);
+}
+
+.VariantButton.selected {
+  border: 3px solid rgb(213, 242, 203);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: rgb(213, 242, 203);
+  color: rgb(0, 0, 0);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 90%;
+  flex-wrap: wrap;
+  white-space: normal;
+  width: 90%;
+  /* height: 5vh; */
+  padding: 0.5rem;
+  border-radius: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  /* box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50);
+  -webkit-box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50);
+  -moz-box-shadow: 1px 1px 2.5px 0.5px rgba(0,0,0,0.50); */
+}
+.VariantButton.selected:hover {
+  cursor: pointer;
+  -webkit-box-shadow: 0 0 2.5px 2.5px rgba(57, 105, 40, 0.421); 
+  box-shadow: 0 0 2.5px 2.5px rgba(57, 105, 40, 0.421);
 }
