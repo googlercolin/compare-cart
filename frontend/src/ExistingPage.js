@@ -33,7 +33,7 @@ const ExistingPage = () => {
       // width: "83px",
       cellRenderer: (props) => {
         return (
-          <div className="col">
+          <div className='col'>
             <div>{props.value}</div>
             {/* <button className="cancelButton" style={{ fontSize: 12 }} onClick={ async () => {
               setLoading(true);
@@ -45,9 +45,19 @@ const ExistingPage = () => {
         );
       },
     },
-    { headerName: "Title", field: "title", filter: true, cellRenderer: (props) => {
+    {
+      headerName: "Title",
+      field: "title",
+      filter: true,
+      cellRenderer: (props) => {
         return (
-          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word', lineHeight: '2' }}>
+          <div
+            style={{
+              whiteSpace: "normal",
+              wordWrap: "break-word",
+              lineHeight: "2",
+            }}
+          >
             {props.value}
           </div>
         );
@@ -61,17 +71,9 @@ const ExistingPage = () => {
         return (
           <img
             src={props.value[0]}
-            alt="product"
+            alt='product'
             style={{ width: "100px", margin: 5 }}
           />
-        );
-      },
-    },
-    { headerName: "Tags", field: "tags", filter: true, cellRenderer: (props) => {
-        return (
-          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word', lineHeight: '2' }}>
-            {props.value.join(", ")}
-          </div>
         );
       },
     },
@@ -82,13 +84,17 @@ const ExistingPage = () => {
       autoHeight: true,
       cellRenderer: (props) => {
         return (
-          <div className="variant">
+          <div className='variant'>
             {props.value.map((variant, index) => (
-              <div className="col" key={index}>
+              <div className='col' key={index}>
                 <button
                   // className="VariantButton"
                   // style selected variant button differently
-                  className={variantsList[props.rowIndex] === index ? "VariantButton selected" : "VariantButton"}
+                  className={
+                    variantsList[props.rowIndex] === index
+                      ? "VariantButton selected"
+                      : "VariantButton"
+                  }
                   onClick={() => selectVariant(index, props.rowIndex)}
                 >
                   {variant.variant_title}: {variant.price}
@@ -115,9 +121,27 @@ const ExistingPage = () => {
       width: "150px",
       cellRenderer: (props) => {
         return (
-          <a href={props.value} target="_blank" rel="noreferrer">
+          <a href={props.value} target='_blank' rel='noreferrer'>
             Go to Product
           </a>
+        );
+      },
+    },
+    {
+      headerName: "Tags",
+      field: "tags",
+      filter: true,
+      cellRenderer: (props) => {
+        return (
+          <div
+            style={{
+              whiteSpace: "normal",
+              wordWrap: "break-word",
+              lineHeight: "2",
+            }}
+          >
+            {props.value.join(", ")}
+          </div>
         );
       },
     },
@@ -126,13 +150,22 @@ const ExistingPage = () => {
       width: "120px",
       cellRenderer: (props) => {
         return (
-          <div className="col">
-            <button className="cancelButton" style={{ fontSize: 12 }} onClick={ async () => {
-              setLoading(true);
-              await deleteProduct({ product_id: props.data.id.toString(), id: uniqueid.toString() });
-              setLoading(false);
-              getUserData(uniqueid);
-            }}>delete</button>
+          <div className='col'>
+            <button
+              className='cancelButton'
+              style={{ fontSize: 12 }}
+              onClick={async () => {
+                setLoading(true);
+                await deleteProduct({
+                  product_id: props.data.id.toString(),
+                  id: uniqueid.toString(),
+                });
+                setLoading(false);
+                getUserData(uniqueid);
+              }}
+            >
+              Delete
+            </button>
           </div>
         );
       },
