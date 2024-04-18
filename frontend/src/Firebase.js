@@ -20,12 +20,5 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   export const db = getFirestore(app);
   const functions = getFunctions(app);
-  console.log("functions", functions);
   export const addProducts = httpsCallable(functions, "add_products_callable");
   export const deleteProduct = httpsCallable(functions, "delete_product_callable");
-  // deleteProduct({product_id: "7597823819953", id: "be-full-service-business"}).then((result) => {
-  //   console.log("result", result)
-  // });
-  // addProducts({urls: ['https://2degrees.sg/collections/all']}).then((result) => {
-  //     console.log("result", result)
-  //   });

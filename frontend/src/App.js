@@ -11,12 +11,10 @@ import ExistingPage from "./ExistingPage";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route path="/:uniqueid" element={<ExistingPage />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route exact path="/" element={<HomePage />} />
+      <Route path="/:uniqueid" element={<ExistingPage />} />
+    </Routes>
   );
 
 

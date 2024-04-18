@@ -16,6 +16,7 @@ const HomePage = () => {
   const [productNameValid, setProductNameValid] = useState(true);
 
   const [uniqueLink, setUniqueLink] = useState("");
+  const [uniqueLinkInvalid, setUniqueLinkInvalid] = useState(false);
 
   useEffect(() => {
     setLoading(true)
@@ -34,11 +35,11 @@ const HomePage = () => {
     // setTimeout(() => {
     //   setProductNameValid(true);
     // }, 3000);
-    console.log("add product", product.productLink)
+    // console.log("add product", product.productLink)
     setLoading(true)
-    console.log("Loading set")
+    // console.log("Loading set")
     await addProducts({ urls: [product.productLink]}).then((res) => {
-      console.log("res", res.data.id)
+      // console.log("res", res.data.id)
       setLoading(false)
       window.location.href = window.location.href+res.data.id;
     })
@@ -50,17 +51,18 @@ const HomePage = () => {
   }
 
   const uniqueLinkHandler = async () => {
-    console.log("getLinks")
+    // console.log("getLinks")
     const links_ref = collection(db,'unique_links');
     const querySnapshot = await getDocs(links_ref);
     querySnapshot.forEach(doc => {
-      console.log(doc.id, '=>', doc.data());
+      // console.log(doc.id, '=>', doc.data());
       if (doc.id === uniqueLink) {
-        console.log("found")
+        // console.log("found")
         window.location.href = window.location.href+uniqueLink;
       }
     }); 
-    console.log("not found");
+    // console.log("not found");
+    setUniqueLinkInvalid(true);
   }
 
   const setHidden = (disableScroll) => {
@@ -118,13 +120,13 @@ const HomePage = () => {
               placeholder=" Enter unique ID xx-xxx-xxx-xx" 
               onChange={inputLink}
             />
-            {!productNameValid && (
-              <p className="invalidText">
-                This is a required field.
-              </p>
-            )}
             <button className="Button" onClick={uniqueLinkHandler}>Go!</button>
           </div>
+          {uniqueLinkInvalid && (
+              <p className="invalidText">
+                User not found.
+              </p>
+            )}
         </div>
       </div>
     </div>

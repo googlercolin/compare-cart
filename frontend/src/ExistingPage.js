@@ -201,20 +201,20 @@ const ExistingPage = () => {
   };
 
   const selectVariant = (index, rowidx) => {
-    console.log("Variant selected", index, rowidx);
-    console.log("selected variants", variantsList);
+    // console.log("Variant selected", index, rowidx);
+    // console.log("selected variants", variantsList);
     setVariantsList((prev) => {
       let newarr = [...prev];
       newarr[rowidx] = index;
       return newarr;
     });
-    console.log("after", variantsList);
+
     setRowData((prev) => {
       let newarr = [...prev];
       newarr[rowidx].price = prev[rowidx].variants[index].price;
       return newarr;
     });
-    console.log("after", rowData);
+
   };
 
   //updates the event title and startTime in event
@@ -231,9 +231,9 @@ const ExistingPage = () => {
     // setTimeout(() => {
     //   setProductNameValid(true);
     // }, 3000);
-    console.log("add product", product.productLink)
+
     setLoading(true);
-    console.log("Loading set");
+
     await addProducts({ urls: [product.productLink], id: uniqueid });
     setLoading(false);
     window.location.reload();
