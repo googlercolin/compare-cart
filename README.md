@@ -1,59 +1,93 @@
-# compare-cart
-A product and price comparison service
+# Compare Cart
 
-### scraper.py
+This repository contains code for a project that involves scraping product data from online stores and storing it in a Firebase Firestore database. The code consists of two main components:
 
-This module (`scraper.py`) provides functionalities to scrape product information from stores. It includes the following functions:
+1. **Cloud Functions for Firebase**: This directory contains Python code for Firebase Cloud Functions responsible for handling HTTP requests to add products to the Firestore database and delete products from it.
 
-#### get_json(url, page)
-- Retrieves products.json from a given store URL and page number.
-- Parameters:
-  - `url` (str): URL of the store.
-  - `page` (int): Page number of the products.json.
-- Returns:
-  - `products_json` (str): Products.json from the store.
+2. **Frontend**: This directory contains frontend code for the project, built using React.js. It includes Node modules and source files necessary for running the frontend application.
 
-#### to_df(products_json)
-- Converts products.json to a pandas DataFrame.
-- Parameters:
-  - `products_json` (str): Products.json from the store.
-- Returns:
-  - `df` (pd.DataFrame): Pandas DataFrame of the products.json.
+## Cloud Functions for Firebase
 
-#### extract_image_links(images)
-- Extracts image links from the 'src' field in the 'images' column.
-- Parameters:
-  - `images` (list): List of dictionaries containing image information.
-- Returns:
-  - `links` (list): List of image links extracted from the 'src' field.
+### `functions/main.py`
 
-#### get_products(url)
-- Gets all products from a store and selects required fields.
-- Parameters:
-  - `url` (str): URL of the store.
-- Returns:
-  - `df` (pd.DataFrame): Pandas DataFrame of the products with selected fields.
+This Python script contains Cloud Functions for Firebase responsible for adding and deleting products from the Firestore database.
 
-#### save_products_as_json(url)
-- Saves products from the provided URL into a JSON file.
-- Parameters:
-  - `url` (str): The URL of the website.
+#### `add_products_callable`
 
-#### InvalidLinkError
-- Custom exception raised when the link is not valid or not supported.
+- Description: This function takes an HTTP request containing URLs of products and adds them to the Firestore database. It returns a response containing a message confirming the addition, the list of products added, and a custom ID for the collection.
 
-### retrieve_json.py
+#### `delete_product_callable`
 
-This script (`retrieve_json.py`) is an example of how to use `scraper.py` to retrieve product information from a given URL and save it into a JSON file. It includes the following functionality:
+- Description: This function takes an HTTP request containing the ID of a product to delete and deletes it from the Firestore database. It returns a response containing a message confirming the deletion, the ID of the deleted product, and the custom ID of the collection.
 
-- If executed as a standalone script, it expects a URL as an argument and calls the `save_products_as_json` function from `scraper.py` to save the products into a JSON file.
+### `functions/fn_scraper.py`
 
-Usage:
+This Python script contains utility functions for scraping product data from online stores.
 
+#### `get_json`
+
+- Description: Retrieves products.json from a given store URL and page number.
+
+#### `to_df`
+
+- Description: Converts products.json to a Pandas DataFrame.
+
+#### `extract_image_links`
+
+- Description: Extracts image links from the 'src' field in the 'images' column of the DataFrame.
+
+#### `get_products`
+
+- Description: Retrieves all products from a store and selects required fields to create a DataFrame.
+
+#### `return_products_as_json_string_and_domain`
+
+- Description: Saves products from the provided URL into a JSON file and returns the products DataFrame along with the domain name.
+
+## Frontend
+
+### `frontend`
+
+This directory contains frontend code for the project, built using React.js.
+
+#### Running the Frontend
+
+To start the frontend, run the following commands:
 ```bash
-python retrieve_json.py <url>
+npm install
+npm start
 ```
 
-- `<url>`: The URL of the store.
+#### Deploying the Frontend
 
-Note: Ensure that `scraper.py` is in the same directory or in the Python path to run `retrieve_json.py` successfully.
+To deploy the frontend, run the following commands:
+```bash
+npm run build
+firebase deploy --only hosting
+```
+
+Ensure you have a `.env` file with the `REACT_APP_API_KEY` and `REACT_APP_APP_ID`. Contact the developers for these keys if needed.
+
+---
+
+## Tested Links for the Web App
+- https://2degrees.sg/collections/all
+- https://kurasu.sg/collections/coffee-beans-1
+- https://homegroundcoffeeroasters.com/collections/filter-coffee
+- https://homegroundcoffeeroasters.com/collections/espresso-coffee
+- https://latamcoffee.com/collections/all
+- https://www.parchmen.co/collections/roasted-coffee-beans
+- https://littlewolf.coffee/collections/coffee
+- https://september.coffee/collections/coffee
+- https://dayglow.coffee/collections/craft-coffee-1
+- https://www.subtext.coffee/collections/filter-coffee-beans
+- https://ethicaroasters.com/collections/filter-coffee
+- https://shaughnessycafe.com/collections/coffee-beans
+- https://rossocoffeeroasters.com/collections/coffee
+- https://pilotcoffeeroasters.com/coffee
+- https://onyxcoffeelab.com/collections/coffee
+- https://counterculturecoffee.com/collections/coffee
+
+---
+
+For any queries or issues related to the keys or functionality, please contact the developers.
